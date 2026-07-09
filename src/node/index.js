@@ -30,6 +30,22 @@ app.get("/customers", async (req, res) => {
   }
 });
 
+app.get("/customers/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const result = await pool.query(
+      "SELECT * FROM customers WHERE customer_id = $1",
+      [id]
+    );
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error");
+  }
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -41,6 +57,51 @@ app.post("/add-customer", async (req, res) => {
       [companyName, industry, contact, location]
     );
     res.json({ success: true, customer: newCustomer.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
+app.delete("/customers/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    await pool.query(
+      "DELETE FROM customers WHERE customer_id = $1",
+      [id]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
+app.put("/customers/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const {
+      companyName,
+      industry,
+      contact,
+      location
+    } = req.body;
+
+    await pool.query(
+      `UPDATE customers
+       SET company_name=$1,
+           industry=$2,
+           contact=$3,
+           location=$4
+       WHERE customer_id=$5`,
+      [companyName, industry, contact, location, id]
+    );
+
+    res.json({ success: true });
+
   } catch (err) {
     console.error(err);
     res.json({ success: false });
