@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: 'http://localhost:5918'
+  apiUrl: '/api_ry_maeda'
 };
 
 export default config;
