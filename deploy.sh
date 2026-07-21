@@ -32,3 +32,9 @@ cp -ipr ./src/web/* "$WEB_DIR/"
 cd "$APP_DIR/src/node"
 
 npm install
+
+# 既存Nodeプロセス停止
+pkill -f "node index.js" || true
+
+# Node.js起動
+nohup npm start > node.log 2>&1 &
