@@ -28,3 +28,9 @@ git pull
 # nginxのhtmlディレクトリに更新されたソースファイルをコピーします。
 rm -rf "$WEB_DIR"/*
 cp -ipr ./src/web/* "$WEB_DIR/"
+
+cd "$APP_DIR/src/node"
+
+npm install
+
+pm2 restart index || pm2 start npm --name index -- start
